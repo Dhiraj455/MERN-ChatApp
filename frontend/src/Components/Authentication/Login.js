@@ -7,8 +7,11 @@ import {
   InputRightElement,
   Text,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { login } from '../../Services/User';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
   const [userData, setUserData] = useState({
@@ -16,11 +19,62 @@ export const Login = () => {
     password: '',
   });
   const [show, setShow] = useState(false);
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const handleShow = () => setShow(!show);
 
   const SubmitHandler = () => {
     console.log('SubmitHandler', userData);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!userData.email || !userData.password) {
+      toast({
+        title: 'Please fill all the fields',
+        status: 'warning',
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (!emailRegex.test(userData.email)) {
+      toast({
+        title: 'Enter a valid email',
+        status: 'warning',
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    login(userData)
+      .then(data => {
+        if (data.success) {
+          toast({
+            title: data.message,
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+          });
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          navigate('/chat');
+        } else {
+          toast({
+            title: data.message,
+            status: 'error',
+            duration: 2000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch(err => {
+        // console.log(err);
+        toast({
+          title: 'Something went wrong',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      });
   };
 
   return (

@@ -7,8 +7,10 @@ import {
   InputRightElement,
   Text,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { register } from '../../Services/User';
 
 export const Signup = () => {
   const [userData, setUserData] = useState({
@@ -18,6 +20,7 @@ export const Signup = () => {
     pic: '',
   });
   const [show, setShow] = useState(false);
+  const toast = useToast();
 
   const handleShow = () => setShow(!show);
 
@@ -28,9 +31,60 @@ export const Signup = () => {
   };
 
   const SubmitHandler = () => {
-    console.log(userData);
+    const form = new FormData();
+
+    form.append('name', userData.name);
+    form.append('email', userData.email);
+    form.append('password', userData.password);
+    form.append('pic', userData.pic);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!userData.name || !userData.email || !userData.password) {
+      toast({
+        title: 'Please fill all the fields',
+        status: 'warning',
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    } else if (!emailRegex.test(userData.email)) {
+      toast({
+        title: 'Enter a valid email',
+        status: 'warning',
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    register(form)
+      .then(data => {
+        // console.log(data);
+        if (data.success) {
+          toast({
+            title: data.message,
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: data.message,
+            status: 'error',
+            duration: 2000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch(err => {
+        toast({
+          title: 'Something went wrong',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      });
   };
-  
+
   return (
     <VStack spacing={4} color={'black'}>
       <FormControl id="firstName" isRequired>
