@@ -69,3 +69,37 @@ module.exports.login = async (req, res) => {
     res.status(400).json(response);
   }
 };
+
+module.exports.getUsers = async (req, res) => {
+  let response = {
+    success: false,
+    message: "",
+    errMessage: "",
+    data: [],
+  };
+  try {
+    const search = req.query.search;
+    let users;
+    search
+      ? (users = await User.find({
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+          ],
+          _id: { $ne: req.user._id },
+        }))
+      : (users = await User.find({ _id: { $ne: req.user._id } }));
+    if (!users || users.length === 0) {
+      response.errMessage = "No users found";
+      return res.status(400).json(response);
+    }
+    response.success = true;
+    response.message = "Users fetched successfully";
+    response.data = users;
+    res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    response.errMessage = "Something went wrong";
+    res.status(400).json(response);
+  }
+};
