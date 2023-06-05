@@ -89,3 +89,49 @@ module.exports.getChats = async (req, res) => {
     res.status(400).json(response);
   }
 };
+
+module.exports.createGroup = async (req, res) => {
+  let response = {
+    success: false,
+    message: "",
+    errMessage: "",
+  };
+  try {
+    const { users, groupName } = req.body;
+    if (!users || users.length === 0 || !groupName) {
+      response.message = "Users and group name are required";
+      return res.status(400).json(response);
+    }
+    
+    let user = JSON.stringify(users);
+    user = JSON.parse(user);
+
+    if (user.length < 2) {
+      response.message = "Please select more than one user";
+      return res.status(400).json(response);
+    }
+    user.push(req.user);
+
+    const groupChat = await Chat.create({
+      chatName: groupName,
+      users: user,
+      isGroupChat: true,
+      groupAdmin: req.user,
+    });
+
+    const FullChat = await Chat.findOne({
+      _id: groupChat._id,
+    })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    response.success = true;
+    response.message = "Group created";
+    response.chat = FullChat;
+    return res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    response.errMessage = "Something went wrong";
+    res.status(400).json(response);
+  }
+};

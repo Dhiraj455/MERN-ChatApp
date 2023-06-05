@@ -7,7 +7,7 @@ router.post('/', Auth, chatController.accessChat);
 
 router.get("/", Auth, chatController.getChats);
 
-// router.post("/group", Auth, chatController.createGroup);
+router.post("/group", Auth, chatController.createGroup);
 
 // router.put("/rename", Auth, chatController.renameGroup);
 
