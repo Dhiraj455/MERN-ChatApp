@@ -102,7 +102,7 @@ module.exports.createGroup = async (req, res) => {
       response.message = "Users and group name are required";
       return res.status(400).json(response);
     }
-    
+
     let user = JSON.stringify(users);
     user = JSON.parse(user);
 
@@ -135,3 +135,38 @@ module.exports.createGroup = async (req, res) => {
     res.status(400).json(response);
   }
 };
+
+module.exports.renameGroup = async (req, res) => {
+  let response = {
+    success: false,
+    message: "",
+    errMessage: "",
+  };
+  try {
+    const { chatId, chatName } = req.body;
+    if (!chatId || !chatName) {
+      response.message = "Chat id and chat name are required";
+      return res.status(400).json(response);
+    }
+    const chat = await Chat.findOneAndUpdate(
+      { _id: chatId, groupAdmin: req.user._id },
+      { chatName: chatName },
+      { new: true }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+    if (!chat) {
+      response.message = "Chat not found";
+      return res.status(400).json(response);
+    }
+    response.success = true;
+    response.message = "Chat renamed";
+    response.chat = chat;
+    return res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    response.errMessage = "Something went wrong";
+    res.status(400).json(response);
+  }
+};
+

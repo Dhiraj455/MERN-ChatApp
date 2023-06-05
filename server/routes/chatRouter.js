@@ -9,7 +9,7 @@ router.get("/", Auth, chatController.getChats);
 
 router.post("/group", Auth, chatController.createGroup);
 
-// router.put("/rename", Auth, chatController.renameGroup);
+router.put("/rename", Auth, chatController.renameGroup);
 
 // router.put("/add", Auth, chatController.addMember);
 
