@@ -11,8 +11,8 @@ router.post("/group", Auth, chatController.createGroup);
 
 router.put("/rename", Auth, chatController.renameGroup);
 
-// router.put("/add", Auth, chatController.addMember);
+router.put("/add", Auth, chatController.addMember);
 
-// router.put("/remove", Auth, chatController.removeMember);
+router.put("/remove", Auth, chatController.removeMember);
 
 module.exports = router;

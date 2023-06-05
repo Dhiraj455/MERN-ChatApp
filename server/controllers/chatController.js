@@ -170,3 +170,110 @@ module.exports.renameGroup = async (req, res) => {
   }
 };
 
+module.exports.addMember = async (req, res) => {
+  let response = {
+    success: false,
+    message: "",
+    errMessage: "",
+  };
+  try {
+    const { chatId, userId } = req.body;
+    if (!chatId || !userId) {
+      response.errMessage = "Chat id and user id are required";
+      return res.status(400).json(response);
+    }
+
+    const memberExist = await Chat.findOne({
+      _id: chatId,
+      users: { $elemMatch: { $eq: userId } },
+    });
+
+    if (memberExist) {
+      response.errMessage = "Member already exist";
+      return res.status(400).json(response);
+    }
+
+    const chat = await Chat.findOneAndUpdate(
+      {
+        _id: chatId,
+        groupAdmin: req.user._id,
+      },
+      {
+        $push: { users: userId },
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    if (!chat) {
+      response.errMessage = "Chat not found";
+      return res.status(400).json(response);
+    }
+
+    response.success = true;
+    response.message = "Member added";
+    response.chat = chat;
+    res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    response.errMessage = "Something went wrong";
+    res.status(400).json(response);
+  }
+};
+
+module.exports.removeMember = async (req, res) => {
+  let response = {
+    success: false,
+    message: "",
+    errMessage: "",
+  };
+  try {
+    const { chatId, userId } = req.body;
+    if (!chatId || !userId) {
+      response.errMessage = "Chat id and user id are required";
+      return res.status(400).json(response);
+    }
+
+    const memberNotExist = await Chat.findOne({
+      _id: chatId,
+      users: { $elemMatch: { $eq: userId } },
+    });
+
+    if (!memberNotExist) {
+      response.errMessage = "Member not exist";
+      return res.status(400).json(response);
+    }
+
+    const chat = await Chat.findOneAndUpdate(
+      {
+        _id: chatId,
+        groupAdmin: req.user._id,
+      },
+      {
+        $pull: { users: userId },
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    if (!chat) {
+        response.errMessage = "Chat not found";
+        return res.status(400).json(response);
+    }
+
+    response.success = true;
+    response.message = "Member removed";
+    response.chat = chat;
+    res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    response.errMessage = "Something went wrong";
+    res.status(400).json(response);
+  }
+};
