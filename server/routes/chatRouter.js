@@ -5,7 +5,7 @@ const Auth = require('../middleware/authMiddleware');
 
 router.post('/', Auth, chatController.accessChat);
 
-// router.get("/", Auth, chatController.getChats);
+router.get("/", Auth, chatController.getChats);
 
 // router.post("/group", Auth, chatController.createGroup);
 
