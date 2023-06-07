@@ -62,6 +62,7 @@ module.exports.login = async (req, res) => {
     response.message = "User logged in successfully";
     response.token = token;
     response.user = user;
+    response.user.token = token;
     return res.status(200).json(response);
   } catch (err) {
     console.log(err);

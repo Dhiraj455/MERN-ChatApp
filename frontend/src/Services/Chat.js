@@ -1,0 +1,18 @@
+import axios from 'axios';
+let baseUrl = 'http://localhost:5000/api/chat';
+const token = localStorage.getItem('token');
+
+export const accessChat = async form => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await axios.post(`${baseUrl}/accessChat`, form, config);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};

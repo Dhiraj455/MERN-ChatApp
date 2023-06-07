@@ -8,7 +8,7 @@ import { Chat } from './Pages/Chat';
 function App() {
   return (
     <div className="App">
-      <ColorModeSwitcher justifySelf="flex-end" />
+      {/* <ColorModeSwitcher justifySelf="flex-end" /> */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat />} />
