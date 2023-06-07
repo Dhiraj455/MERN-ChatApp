@@ -10,7 +10,22 @@ export const accessChat = async form => {
     },
   };
   try {
-    const response = await axios.post(`${baseUrl}/accessChat`, form, config);
+    const response = await axios.post(`${baseUrl}/`, form, config);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getChats = async () => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    const response = await axios.get(`${baseUrl}/`, config);
     return response.data;
   } catch (err) {
     console.log(err);

@@ -36,7 +36,7 @@ module.exports.accessChat = async (req, res) => {
     }
 
     const newChat = await Chat.create({
-      chatName: "sender1",
+      chatName: "sender",
       users: [req.user._id, userId],
       isGroupChat: false,
     });
