@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <Container maxW="container.xl" centerContent>
       <Box
-        d="flex"
+        display={{ base: 'flex', md: 'flex' }}
         justifyContent="center"
         p={3}
         bg={'white'}

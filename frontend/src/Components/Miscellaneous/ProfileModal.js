@@ -27,6 +27,7 @@ export const ProfileModal = ({ user, children }) => {
           display={{ base: 'flex' }}
           icon={<ViewIcon />}
           onClick={onOpen}
+          color={'black'}
         />
       )}
       <Modal isOpen={isOpen} onClose={onClose}>

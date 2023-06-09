@@ -106,7 +106,7 @@ export const SideDrawer = () => {
   return (
     <>
       <Box
-        display={{ base: 'none', md: 'flex' }}
+        display={{ base: 'flex', md: 'flex' }}
         alignItems={'center'}
         justifyContent="space-between"
         w={'100%'}
