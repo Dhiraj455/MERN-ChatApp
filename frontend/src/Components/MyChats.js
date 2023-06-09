@@ -5,6 +5,7 @@ import { getChats } from '../Services/Chat';
 import { AddIcon } from '@chakra-ui/icons';
 import { ChatLoading } from './ChatLoading';
 import { getSender } from '../Config/ChatLogic';
+import { GroupChatModal } from './Miscellaneous/GroupChatModal';
 
 export const MyChats = () => {
   const [loggedUser, setLoggedUser] = useState();
@@ -58,14 +59,16 @@ export const MyChats = () => {
           alignItems="center"
         >
           MyChats
-          <Button
-            display={{ base: 'flex' }}
-            fontSize={{ base: '17px', md: '10px', lg: '17px' }}
-            rightIcon={<AddIcon />}
-            color={'black'}
-          >
-            New Group Chat
-          </Button>
+          <GroupChatModal>
+            <Button
+              display={{ base: 'flex' }}
+              fontSize={{ base: '17px', md: '10px', lg: '17px' }}
+              rightIcon={<AddIcon />}
+              color={'black'}
+            >
+              New Group Chat
+            </Button>
+          </GroupChatModal>
         </Box>
         <Box
           display={{ base: 'flex' }}

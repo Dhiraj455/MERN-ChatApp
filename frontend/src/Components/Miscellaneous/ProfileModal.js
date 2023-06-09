@@ -10,6 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { ViewIcon } from '@chakra-ui/icons';
@@ -52,13 +53,18 @@ export const ProfileModal = ({ user, children }) => {
               src={user.pic}
               alt={user.name}
             ></Image>
+            <Text
+              fontSize={{ base: '28px', md: '30px' }}
+              fontFamily="Work sans"
+            >
+              Email: {user.email}
+            </Text>
           </ModalBody>
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
